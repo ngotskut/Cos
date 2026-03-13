@@ -410,7 +410,28 @@ def setapi(message):
 
 if __name__ == '__main__':
     init_db(); bot.infinity_polling()
-    
+
+@bot.message_handler(commands=['autonumber'])
+def autonumber_cmd(message):
+
+    uid = message.from_user.id
+
+    if not is_whitelisted(uid):
+        bot.reply_to(message, "🚫 Tidak diizinkan.")
+        return
+
+    api_key = get_user_api(uid)
+
+    if not api_key:
+        bot.reply_to(message, "❌ Set API dulu dengan:\n/setapi APIKEY")
+        return
+
+    bot.reply_to(message, "🚀 Auto mencari nomor dimulai...")
+
+    threading.Thread(
+        target=auto_order_until_number,
+        args=(message.chat.id, api_key, "vietnam")
+    ).start()
 # =============================================
 # AUTO ORDER SAMPAI DAPAT NOMOR
 # =============================================
