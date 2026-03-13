@@ -410,3 +410,51 @@ def setapi(message):
 
 if __name__ == '__main__':
     init_db(); bot.infinity_polling()
+    
+# =============================================
+# AUTO ORDER SAMPAI DAPAT NOMOR
+# =============================================
+def auto_order_until_number(chat_id, api_key, country_key="vietnam"):
+    country = COUNTRIES[country_key]
+
+    bot.send_message(chat_id, f"🔄 Mencari nomor {country['name']}...")
+
+    attempt = 0
+
+    while True:
+        attempt += 1
+
+        kwargs = {
+            "service": SERVICE,
+            "country": country["country_id"]
+        }
+
+        if "maxPrice" in country:
+            kwargs["maxPrice"] = country["maxPrice"]
+
+        res = req_api(api_key, "getNumber", **kwargs)
+
+        if "ACCESS_NUMBER" in res:
+            p = res.split(":")
+            act_id = p[1]
+            number = p[2]
+
+            bot.send_message(
+                chat_id,
+                f"✅ Nomor ditemukan!\n\n"
+                f"📞 `{number}`\n"
+                f"🆔 `{act_id}`\n"
+                f"🔄 Percobaan: `{attempt}`",
+                parse_mode="Markdown"
+            )
+            break
+
+        elif res == "NO_NUMBERS":
+            time.sleep(2)
+
+        elif res == "NO_BALANCE":
+            bot.send_message(chat_id, "❌ Saldo API habis.")
+            break
+
+        else:
+            time.sleep(3)
