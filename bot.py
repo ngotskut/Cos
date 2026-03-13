@@ -24,7 +24,7 @@ if os.path.exists(VOL_PATH) and os.path.isdir(VOL_PATH):
     DEFAULT_DB = os.path.join(VOL_PATH, "database.db")
 
 DB_PATH = os.environ.get("DB_PATH", DEFAULT_DB)
-ADMIN_ID = 940475417
+ADMIN_ID = 1047760474
 MAX_ORDER = 20         
 OTP_TIMEOUT = 1200     # 20 Menit
 CHECK_INTERVAL = 4     # Jeda antar cek
